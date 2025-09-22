@@ -1,14 +1,15 @@
 package implementacionApiRest.controllers;
 
 import implementacionApiRest.domain.Customer;
-import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 @RestController
+@RequestMapping("/clientes")
 public class CustomerController {
 
     private List<Customer> customers = new ArrayList<>(Arrays.asList(
@@ -18,12 +19,13 @@ public class CustomerController {
             new Customer(4,"Marcos Bermejo", "marcosb","123")
     ));
 
-    @GetMapping("/clientes")
+    @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getClientes(){
         return customers;
     }
 
-    @GetMapping("/clientes/{username}")
+    @GetMapping("/{username}")
+    //@RequestMapping(value = "/{username}", method = RequestMethod.GET)
     public Customer getCliente(@PathVariable String username){
         for (Customer customer : customers) {
             if (customer.getUsername().equalsIgnoreCase(username)) {
@@ -33,13 +35,15 @@ public class CustomerController {
         return null;
     }
 
-    @PostMapping("/clientes")
+    @PostMapping
+    //@RequestMapping(method = RequestMethod.POST)
     public Customer postCliente(@RequestBody Customer customer){
         customers.add(customer);
         return customer;
     }
 
-    @PutMapping("clientes")
+    @PutMapping
+    //@RequestMapping(method = RequestMethod.PUT)
     public Customer putClientes(@RequestBody Customer customer){
         for(Customer customer1: customers){
             if(customer.getID() == customer1.getID()){
@@ -53,7 +57,8 @@ public class CustomerController {
         return null;
     }
 
-    @DeleteMapping("/clientes/{ID}")
+    @DeleteMapping("/{ID}")
+    //@RequestMapping(value = "/{ID}",method = RequestMethod.DELETE)
     public Customer deleteClientes(@PathVariable int ID){
         for(Customer customer: customers){
             if(customer.getID() == ID){
@@ -65,7 +70,8 @@ public class CustomerController {
         return null;
     }
 
-    @PatchMapping("/clientes")
+    @PatchMapping
+    //@RequestMapping(method = RequestMethod.PATCH)
     public Customer patchCliente(@RequestBody Customer customer){
         for(Customer c: customers){
             if(c.getID() == customer.getID()){
