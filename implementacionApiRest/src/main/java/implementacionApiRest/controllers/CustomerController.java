@@ -53,10 +53,12 @@ public class CustomerController {
                 customer1.setUsername(customer.getUsername());
                 customer1.setPassword(customer.getPassword());
 
-                return ResponseEntity.status(HttpStatus.CREATED).body("Cliente modificado satisfactoriamente: "+customer.getUsername());
+                //Devolvemos un código de respuesta 204 que es envio exitoso pero sin respuesta
+                return ResponseEntity.noContent().build();
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El cliente no existe! "+customer.getUsername());
+        //Devolvemos un código de respuesta 404 recurso no encontrado
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{ID}")
@@ -66,10 +68,10 @@ public class CustomerController {
             if(customer.getID() == ID){
                 customers.remove(customer);
 
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente eliminado correctamente: "+customer.getUsername());
+                return ResponseEntity.noContent().build();
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El cliente con ID: "+ID+" no existe: ");
+        return ResponseEntity.notFound().build();
     }
 
     @PatchMapping
