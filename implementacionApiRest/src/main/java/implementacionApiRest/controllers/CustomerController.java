@@ -1,6 +1,8 @@
 package implementacionApiRest.controllers;
 
 import implementacionApiRest.domain.Customer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,59 +22,59 @@ public class CustomerController {
     ));
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Customer> getClientes(){
-        return customers;
+    public ResponseEntity<List<Customer>> getClientes(){
+        return ResponseEntity.ok(customers);
     }
 
     @GetMapping("/{username}")
     //@RequestMapping(value = "/{username}", method = RequestMethod.GET)
-    public Customer getCliente(@PathVariable String username){
+    public ResponseEntity<?> getCliente(@PathVariable String username){
         for (Customer customer : customers) {
             if (customer.getUsername().equalsIgnoreCase(username)) {
-                return customer;
+                return ResponseEntity.ok(customer);
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado con username: "+username);
     }
 
     @PostMapping
     //@RequestMapping(method = RequestMethod.POST)
-    public Customer postCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> postCliente(@RequestBody Customer customer){
         customers.add(customer);
-        return customer;
+        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado con éxito: "+customer.getUsername());
     }
 
     @PutMapping
     //@RequestMapping(method = RequestMethod.PUT)
-    public Customer putClientes(@RequestBody Customer customer){
+    public ResponseEntity<?> putClientes(@RequestBody Customer customer){
         for(Customer customer1: customers){
             if(customer.getID() == customer1.getID()){
                 customer1.setName(customer.getName());
                 customer1.setUsername(customer.getUsername());
                 customer1.setPassword(customer.getPassword());
 
-                return customer1;
+                return ResponseEntity.status(HttpStatus.CREATED).body("Cliente modificado satisfactoriamente: "+customer.getUsername());
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El cliente no existe! "+customer.getUsername());
     }
 
     @DeleteMapping("/{ID}")
     //@RequestMapping(value = "/{ID}",method = RequestMethod.DELETE)
-    public Customer deleteClientes(@PathVariable int ID){
+    public ResponseEntity<?> deleteClientes(@PathVariable int ID){
         for(Customer customer: customers){
             if(customer.getID() == ID){
                 customers.remove(customer);
 
-                return customer;
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente eliminado correctamente: "+customer.getUsername());
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El cliente con ID: "+ID+" no existe: ");
     }
 
     @PatchMapping
     //@RequestMapping(method = RequestMethod.PATCH)
-    public Customer patchCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> patchCliente(@RequestBody Customer customer){
         for(Customer c: customers){
             if(c.getID() == customer.getID()){
                 if(customer.getName() != null){
@@ -82,10 +84,10 @@ public class CustomerController {
                 }if(customer.getPassword() != null){
                     c.setPassword(customer.getPassword());
                 }
-                return c;
+                return ResponseEntity.status(HttpStatus.CREATED).body("Cliente "+customer.getUsername()+" modificado con éxito");
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente "+customer.getID()+" no encontrado");
     }
 }
 
