@@ -1,10 +1,14 @@
 package implementacionApiRest.controllers;
 
 import implementacionApiRest.domain.Customer;
+import jakarta.servlet.Servlet;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +45,17 @@ public class CustomerController {
     //@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> postCliente(@RequestBody Customer customer){
         customers.add(customer);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado con éxito: "+customer.getUsername());
+       // return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado con éxito: "+customer.getUsername());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{username}")
+                .buildAndExpand(customer.getUsername())
+                .toUri();
+
+        //opción 1 mostraremos la respuesta 201 sin cuerpo de del mensaje, pero con la URI del recurso
+        //return ResponseEntity.created(location).build();
+        //Opción 2 mostramos la respuesta 201 con contenido en el cuerpo del mensaje y la URI del recurso
+        return ResponseEntity.created(location).body(customer);
     }
 
     @PutMapping
