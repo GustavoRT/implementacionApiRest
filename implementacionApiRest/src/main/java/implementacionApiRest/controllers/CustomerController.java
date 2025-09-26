@@ -100,7 +100,7 @@ public class CustomerController {
                 }if(customer.getPassword() != null){
                     c.setPassword(customer.getPassword());
                 }
-                return ResponseEntity.status(HttpStatus.CREATED).body("Cliente "+customer.getUsername()+" modificado con éxito");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Cliente modificado con éxito");
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente "+customer.getID()+" no encontrado");
